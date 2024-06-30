@@ -12,7 +12,13 @@ import (
 
 var parentProjectDirectory string
 
+var thisProjectDirectory string
+
 func main() {
+
+	// Init Project Directory
+	f, _ := os.Getwd()
+	thisProjectDirectory = filepath.Dir(f) + "/" + filepath.Base(f)
 
 	godotenv.Load(".env")
 
@@ -41,7 +47,6 @@ func main() {
 }
 
 func getProjectDir() string {
-
 	environmentValue, err := getEnv("PROJECT_DIR")
 	if err != nil {
 		homeDir, _ := os.UserHomeDir()
@@ -52,14 +57,13 @@ func getProjectDir() string {
 
 func getEnv(key string) (value string, err error) {
 
-	f, _ := os.Getwd()
-	projectDirectory := filepath.Dir(f) + "/" + filepath.Base(f)
-	environmentFile := projectDirectory + "/.env"
+	
+	environmentFile := thisProjectDirectory + "/.env"
 
 	// Check if the environment file exist
 	_, err = os.Stat(environmentFile)
 	if err != nil {
-		return
+		initEnvironmentFile()
 	}
 	err = godotenv.Load(environmentFile)
 	if err != nil {
@@ -102,7 +106,16 @@ func createIndexFile(clientName string, clientEmail string, clientContact string
 	inputText = inputText + "Client Contact: " + clientContact + "\n"
 	inputText = inputText + "Project Name: " + projectName + "\n"
 	inputText = inputText + "Project Date: " + projectDate
-
 	os.WriteFile(parentProjectDirectory+"/readme.txt", []byte(inputText), 0644)
+}
+
+func initEnvironmentFile() {
+	homeDir, _ := os.UserHomeDir()
+	initialProjectDirectory :=  homeDir + "/createFolder"
+	inputText := "PROJECT_DIR=" + initialProjectDirectory + "\n"
+	envFile := thisProjectDirectory+"/.env"
+	os.WriteFile(envFile, []byte(inputText), 0644)
+
+	fmt.Println("Initialized " + envFile + " file. You can modify this file")
 
 }
