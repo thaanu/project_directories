@@ -3,7 +3,7 @@
 This application creates a project directory and creates the folder sturcture accordingly.
 
 ### How to configure the environment file:
-Initially you will not see the `.env` file in the current project directory. You can either create this file manually, or when the application starts this will be be created with initial values.
+Initially you will not see the `.env` file in the current project directory. You can either create this file manually by copying content from `.sample-env`, or when the application starts this will be be created with initial values.
 
 **Main Environment Variables**
 | Value | Description |
